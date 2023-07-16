@@ -19,6 +19,9 @@ public class CurrencyConversionController {
     @Autowired
     private CurrencyExchangeProxy proxy;
 
+    @Autowired
+    private RestTemplate restTemplate;
+
     @GetMapping("/currency-conversion/from/{from}/to/{to}/quantity/{quantity}")
     public CurrencyConversion calculateCurrencyConversion(@PathVariable String from, @PathVariable String to, @PathVariable BigDecimal quantity) {
 
@@ -26,7 +29,7 @@ public class CurrencyConversionController {
         uriVariables.put("from", from);
         uriVariables.put("to", to);
 
-        ResponseEntity<CurrencyConversion> responseEntity = new RestTemplate()
+        ResponseEntity<CurrencyConversion> responseEntity = restTemplate
                 .getForEntity("http://localhost:8000/currency-exchange/from/{from}/to/{to}", CurrencyConversion.class, uriVariables);
 
         CurrencyConversion currencyConversion = responseEntity.getBody();
@@ -52,6 +55,6 @@ public class CurrencyConversionController {
                 currencyConversion.getConversionMultiple(),
                 quantity,
                 quantity.multiply(currencyConversion.getConversionMultiple()),
-                currencyConversion.getEnvironment() +" " + "feign");
+                currencyConversion.getEnvironment() + " " + "feign");
     }
 }
