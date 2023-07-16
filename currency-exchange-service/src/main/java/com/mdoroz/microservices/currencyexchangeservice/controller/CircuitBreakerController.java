@@ -1,6 +1,6 @@
 package com.mdoroz.microservices.currencyexchangeservice.controller;
 
-import io.github.resilience4j.retry.annotation.Retry;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +14,8 @@ public class CircuitBreakerController {
     private Logger logger = LoggerFactory.getLogger(CircuitBreakerController.class);
 
     @GetMapping("/sample-api")
-    @Retry(name = "sample-api", fallbackMethod = "hardcodedResponse")
+//    @Retry(name = "sample-api", fallbackMethod = "hardcodedResponse")
+    @CircuitBreaker(name = "defualt", fallbackMethod = "hardcodedResponse")
     public String sampleApi() {
 
         logger.info("Sample API call received -> ");
@@ -23,7 +24,7 @@ public class CircuitBreakerController {
         return forEntity.getBody();
     }
 
-    public String hardcodedResponse(Exception exception){
+    public String hardcodedResponse(Exception exception) {
         return "Fallback response to dummy sample API";
     }
 
