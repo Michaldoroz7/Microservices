@@ -3,6 +3,8 @@ package com.mdoroz.microservices.currencyconversionservice.controller;
 
 import com.mdoroz.microservices.currencyconversionservice.bean.CurrencyConversion;
 import com.mdoroz.microservices.currencyconversionservice.proxy.CurrencyExchangeProxy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +17,8 @@ import java.util.HashMap;
 
 @RestController
 public class CurrencyConversionController {
+
+    Logger logger = LoggerFactory.getLogger(CurrencyConversionController.class);
 
     @Autowired
     private CurrencyExchangeProxy proxy;
@@ -34,6 +38,8 @@ public class CurrencyConversionController {
 
         CurrencyConversion currencyConversion = responseEntity.getBody();
 
+        logger.info("CalculateCurrencyConversion called with {} to {} with {}", from, to, quantity);
+
         assert currencyConversion != null;
         return new CurrencyConversion(currencyConversion.getId(),
                 from,
@@ -48,6 +54,9 @@ public class CurrencyConversionController {
     public CurrencyConversion calculateCurrencyConversionFeign(@PathVariable String from, @PathVariable String to, @PathVariable BigDecimal quantity) {
 
         CurrencyConversion currencyConversion = proxy.getExchangeValue(from, to);
+
+        logger.info("CalculateCurrencyConversion called with {} to {} with {}", from, to, quantity);
+
 
         return new CurrencyConversion(currencyConversion.getId(),
                 from,
