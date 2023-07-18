@@ -20,10 +20,10 @@ public class CircuitBreakerController {
     @Bulkhead(name = "default")
     public String sampleApi() {
 
-        logger.info("Sample API call received -> ");
-        ResponseEntity<String> forEntity = new RestTemplate().getForEntity("http://localhost:8080/dummy-url", String.class);
+//        logger.info("Sample API call received -> ");
+//        ResponseEntity<String> forEntity = new RestTemplate().getForEntity("http://localhost:8080/dummy-url", String.class);
 
-        return forEntity.getBody();
+        return "sample-api";
     }
 
     public String hardcodedResponse(Exception exception) {
